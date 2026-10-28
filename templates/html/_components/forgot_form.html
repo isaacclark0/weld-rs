@@ -1,0 +1,27 @@
+{% extends "auth_layout.html" %}
+
+{% block title %}Reset your password · Exchange-Ops{% endblock %}
+
+{% block story %}
+  <h2>Account access</h2>
+  <p>Request a link to reset your password.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="auth-heading">
+    <h1>Forgot your password?</h1>
+    <p>Enter your email and we’ll send you a link to choose a new password.</p>
+  </div>
+  <div id="forgot-result" class="auth-result" aria-live="polite"></div>
+  <form hx-post="/forgot" hx-target="#forgot-result" hx-swap="innerHTML" hx-indicator="#loading" class="auth-form">
+    <div class="auth-field">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@company.com" />
+    </div>
+    <button type="submit" class="auth-submit">
+      <span id="loading" class="htmx-indicator auth-spinner" aria-hidden="true"></span>
+      <span class="auth-submit-label">Send reset link</span>
+    </button>
+  </form>
+  <p class="auth-switch">Remembered it? <a href="/login">Back to sign in</a></p>
+{% endblock %}

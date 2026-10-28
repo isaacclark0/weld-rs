@@ -1,0 +1,27 @@
+# Development image: Rust toolchain + MariaDB client headers + Diesel CLI + cargo-watch.
+# Used by docker-compose.yml (the `app` service) and the dev container.
+# The production image is built from `Dockerfile`.
+FROM rust:1.88
+
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends libmariadb-dev pkg-config \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN rustup component add rustfmt clippy \
+  && cargo install --locked diesel_cli --version "~2.2" --no-default-features --features mysql \
+  && cargo install --locked cargo-watch
+
+# Non-root user matching the host's UID so files created in the mounted repo stay yours
+RUN groupadd --gid "$USER_GID" dev \
+  && useradd --uid "$USER_UID" --gid "$USER_GID" -m dev \
+  && mkdir -p /home/dev/target \
+  && chown -R dev:dev /usr/local/cargo /home/dev/target
+
+USER dev
+WORKDIR /app
+
+# Keep build output out of the bind-mounted repo (it lives in a named volume)
+ENV CARGO_TARGET_DIR=/home/dev/target

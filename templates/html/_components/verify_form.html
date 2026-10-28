@@ -1,0 +1,20 @@
+{% extends "auth_layout.html" %}
+
+{% block title %}Verify email · Exchange-Ops{% endblock %}
+
+{% block story %}
+  <h2>Account setup</h2>
+  <p>Confirm your email to finish creating your account.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="auth-heading">
+    <h1>Verify your email</h1>
+    <p>Click below to confirm your email address and activate your account.</p>
+  </div>
+  <form method="post" action="/verify" class="auth-form">
+    <input type="hidden" name="token" value="{{ token }}" />
+    <button type="submit" class="auth-submit">Confirm email</button>
+  </form>
+  <a class="auth-back" href="/login">← Back to sign in</a>
+{% endblock %}

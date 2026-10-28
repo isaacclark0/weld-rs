@@ -1,0 +1,75 @@
+# Local development stack. Usage: `cp .env.example .env && docker compose up`
+services:
+  db:
+    image: docker.io/mariadb:11.4
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    ports:
+      # Published so native tools (`cargo run`, `diesel`, DB GUIs) can reach it too
+      - "${DB_PORT:-3307}:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    environment:
+      # Overrides DATABASE_URL from .env (dotenv never replaces existing variables)
+      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@db:3306/${DB_NAME}
+      # Same port inside and outside the container, so the app's startup URL is accurate
+      APP_PORT: ${APP_PORT:-4001}
+      APP_PUBLIC_URL: http://localhost:${APP_PORT:-4001}
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in .env (see .env.example)}
+      # Local-only account created on startup so the login flow can be tried immediately.
+      DEV_SEED_EMAIL: ${DEV_SEED_EMAIL:-test@example.com}
+      DEV_SEED_PASSWORD: ${DEV_SEED_PASSWORD:-local-test-password}
+      # Outgoing email goes to the mailcrab dev inbox
+      SMTP_HOST: mailcrab
+      SMTP_PORT: "1025"
+      SMTP_TLS: none
+    # The app applies the shared, ordered Diesel migration set at startup.
+    command: cargo watch -w src -w templates -w migrations -w Cargo.toml -w Cargo.lock -w crates -x run
+    ports:
+      - "${APP_PORT:-4001}:${APP_PORT:-4001}"
+    volumes:
+      - .:/app
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-target:/home/dev/target
+    depends_on:
+      db:
+        condition: service_healthy
+      mailcrab:
+        condition: service_started
+
+  # Catches every email the app sends (sign-up verification, password resets): http://localhost:1080
+  mailcrab:
+    image: docker.io/marlonb/mailcrab:v1.10.0
+    ports:
+      - "${MAILCRAB_PORT:-1080}:1080"
+
+  css:
+    image: docker.io/node:22
+    user: node
+    working_dir: /app
+    command: >
+      sh -c "npm ci
+      && npx @tailwindcss/cli -i ./static/input.css -o ./static/tailwind.css --watch=always"
+    volumes:
+      - .:/app
+
+volumes:
+  db-data:
+  cargo-registry:
+  cargo-target:

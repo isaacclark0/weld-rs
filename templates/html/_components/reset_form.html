@@ -1,0 +1,32 @@
+{% extends "auth_layout.html" %}
+
+{% block title %}Choose a new password · Exchange-Ops{% endblock %}
+
+{% block story %}
+  <h2>Account access</h2>
+  <p>Choose a new password for your account.</p>
+{% endblock %}
+
+{% block content %}
+  <div class="auth-heading">
+    <h1>Choose a new password</h1>
+    <p>Make it at least 8 characters long.</p>
+  </div>
+  <div id="reset-result" class="auth-result" aria-live="polite"></div>
+  <form hx-post="/reset" hx-target="#reset-result" hx-swap="innerHTML" hx-indicator="#loading" class="auth-form">
+    <input type="hidden" name="token" value="{{ token }}" />
+    <div class="auth-field">
+      <label for="password">New password</label>
+      <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
+    </div>
+    <div class="auth-field">
+      <label for="confirm">Confirm new password</label>
+      <input type="password" id="confirm" name="confirm" required minlength="8" autocomplete="new-password" placeholder="Enter it again" />
+    </div>
+    <button type="submit" class="auth-submit">
+      <span id="loading" class="htmx-indicator auth-spinner" aria-hidden="true"></span>
+      <span class="auth-submit-label">Update password</span>
+    </button>
+  </form>
+  <a class="auth-back" href="/login">← Back to sign in</a>
+{% endblock %}

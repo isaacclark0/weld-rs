@@ -5,3 +5,7 @@
 file = "src/db/schema.rs"
 generate_missing_sql_type_definitions = true
 custom_type_derives = ["diesel::sql_types::SqlType", "std::fmt::Debug"]
+filter = { only_tables = ["invitations"] }
+
+[migrations_directory]
+dir = "migrations"

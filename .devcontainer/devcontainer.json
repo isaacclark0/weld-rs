@@ -1,0 +1,17 @@
+{
+  "name": "Exchange-Ops",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "runServices": ["db", "app", "css"],
+  "workspaceFolder": "/app",
+  "remoteUser": "dev",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  }
+}

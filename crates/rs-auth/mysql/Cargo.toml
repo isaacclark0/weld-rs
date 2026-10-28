@@ -1,0 +1,28 @@
+[package]
+name = "rs-auth-mysql"
+description = "MariaDB/MySQL persistence for rs-auth."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+readme.workspace = true
+
+[dependencies]
+async-trait = { workspace = true }
+rs-auth-core = { workspace = true }
+diesel = { workspace = true }
+chrono = "0.4"
+time = { workspace = true }
+tokio = { workspace = true, features = ["rt"] }
+
+[dev-dependencies]
+diesel_migrations = { version = "2.2", features = ["mysql"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+[lints]
+workspace = true

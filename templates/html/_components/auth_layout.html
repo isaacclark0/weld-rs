@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="stylesheet" href="/static/tailwind.css" />
+    <link rel="stylesheet" href="/static/auth.css?v=5" />
+    <script src="/static/htmx.min.js"></script>
+    <title>{% block title %}Exchange-Ops{% endblock %}</title>
+  </head>
+  <body class="auth-page">
+    <main class="auth-layout auth-layout-account">
+      <aside class="auth-story" aria-label="Exchange-Ops">
+        <a class="auth-brand auth-brand-light" href="/">Exchange-Ops</a>
+        <div class="auth-story-copy">
+          {% block story %}<h2>Account access</h2>{% endblock %}
+        </div>
+      </aside>
+
+      <section class="auth-panel">
+        <a class="auth-brand auth-brand-mobile" href="/">Exchange-Ops</a>
+        <div class="auth-card">
+          {% block content %}{% endblock %}
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

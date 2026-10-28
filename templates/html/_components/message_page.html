@@ -1,0 +1,17 @@
+{% extends "auth_layout.html" %}
+
+{% block title %}{{ title }} · Exchange-Ops{% endblock %}
+
+{% block story %}
+  <h2>Account update</h2>
+{% endblock %}
+
+{% block content %}
+  <div class="auth-message-card">
+    <div class="auth-heading">
+      <h1>{{ title }}</h1>
+      <p>{{ message }}</p>
+    </div>
+    <a href="{{ link_href }}" class="auth-submit auth-submit-link">{{ link_text }}</a>
+  </div>
+{% endblock %}

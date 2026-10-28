@@ -1,0 +1,19 @@
+consolidate-commits = true
+consolidate-pushes = true
+shared-version = true
+
+tag-name = "v{{version}}"
+tag-message = "Release {{version}}"
+pre-release-commit-message = "chore: release v{{version}}"
+
+[[package]]
+name = "rs-auth-core"
+
+[[package]]
+name = "rs-auth-axum"
+
+[[package]]
+name = "rs-auth-mysql"
+
+[[package]]
+name = "rs-auth"
